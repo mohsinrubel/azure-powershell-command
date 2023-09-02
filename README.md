@@ -1,4 +1,4 @@
-# azure-powershell-command
+# azure-active-directory-powershell-command
 
 ## Install the AzureAD PowerShell Module (if not already installed):
 
@@ -14,6 +14,51 @@ Run the following command to connect to your Azure AD tenant:
 ````
 Connect-AzureAD
 ````
+
+## Setup VS Code
+
+### Install Visual Studio Code (if not already installed):
+
+If you haven't already installed Visual Studio Code, you can download and install it from the official website: Visual Studio Code.
+
+* Open VS Code:
+
+Launch Visual Studio Code after installation.
+
+* Create or Open a PowerShell Script:
+
+You can either create a new PowerShell script by clicking on `` "File" > "New File" and saving it with a .ps1 extension (e.g., myscript.ps1) ``. Alternatively, you can open an existing script.
+
+* Write or Paste Your PowerShell Script:
+
+* Write or paste your PowerShell script into the editor.
+
+
+* Run the Script:
+
+To run your PowerShell script, open the integrated terminal in VS Code if it's not already open. You can do this by clicking ````  "View" > "Terminal" or by pressing Ctrl+Backtick (```) . ````
+
+* Navigate to the directory where your script is located using the cd command:
+
+````
+cd C:\Path\To\Your\Script\Folder
+````
+
+* Then, execute your script by typing:
+
+````
+.\YourScriptName.ps1
+````
+* Replace YourScriptName.ps1 with the actual name of your script.
+
+* View the Output:
+
+The output of your script will appear in the terminal window within VS Code.
+
+* Save the Script (if you made changes):
+
+If you made changes to the script, make sure to save it by clicking "File" > "Save" or pressing Ctrl+S.
+
 ## Retrieve Groups:
 
 Once you're connected, you can use the Get-AzureADGroup cmdlet to retrieve groups from your Azure AD tenant. Here's how to use it:
@@ -319,3 +364,5 @@ if ($group) {
 * The script fetches the group by name, checks if it exists, and retrieves user details, including their email addresses and last sign-in information.
 * User information is stored in a custom object and added to the $results array.
 * The results are then exported to a CSV file named "UserInformation.csv" using Export-Csv.
+
+
