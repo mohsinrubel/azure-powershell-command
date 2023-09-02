@@ -69,3 +69,26 @@ foreach ($member in $groupMembers) {
 ````
 
 In this example, replace "YourGroupName" with the actual name of the group you want to retrieve member details for. The Get-AzureADGroup cmdlet retrieves the group based on the provided search string (group name). The Get-AzureADGroupMember cmdlet retrieves the members of the group based on the group's ObjectId. The Select-Object cmdlet is used to display selected properties such as "DisplayName," "UserPrincipalName," and "ObjectId" for each member.
+
+# Retrieve Specific Group's Members with Last Login Example1:
+
+Use the Microsoft Graph API through the AzureADPreview module to retrieve the members of a specific group along with their last login information. Here's how to do it:
+
+````
+# Replace "YourGroupName" with the actual name of the group
+$groupName = "YourGroupName"
+
+# Get the group's object ID
+$groupId = (Get-AzureADGroup -SearchString $groupName).ObjectId
+
+# Get group members with last login info
+$groupMembers = Get-AzureADGroupMember -ObjectId $groupId | Where-Object { $_.ObjectType -eq "User" }
+
+# Iterate through group members and get their last login info
+foreach ($member in $groupMembers) {
+    $user = Get-AzureADUser -ObjectId $member.ObjectId
+    $user | Select-Object DisplayName, UserPrincipalName, LastSignInDateTime
+}
+
+````
+In this example, replace "YourGroupName" with the actual name of the group you want to retrieve member details for. The Get-AzureADGroup cmdlet retrieves the group based on the provided search string (group name). The Get-AzureADGroupMember cmdlet retrieves the members of the group based on the group's ObjectId. The Select-Object cmdlet is used to display selected properties such as "DisplayName," "UserPrincipalName," and "LastSignInDateTime" (which provides the last login information) for each member.
