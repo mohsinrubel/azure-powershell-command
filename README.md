@@ -46,3 +46,26 @@ $group | Select-Object DisplayName, ObjectId, Description, GroupTypes, SecurityE
 
 ````
 In this example, replace "YourGroupName" with the actual name of the group you want to retrieve. The Get-AzureADGroup cmdlet retrieves the group based on the provided search string (group name). The Select-Object cmdlet is used to display selected properties such as "DisplayName," "ObjectId," "Description," "GroupTypes," and "SecurityEnabled."
+
+## Retrieve Specific Group's Members:
+
+Use the Get-AzureADGroupMember cmdlet to retrieve the members of a specific group. Here's how to do it:
+````
+# Replace "YourGroupName" with the actual name of the group
+$groupName = "YourGroupName"
+
+# Retrieve the group based on DisplayName
+$group = Get-AzureADGroup -SearchString $groupName
+
+# Retrieve members of the group
+$groupMembers = Get-AzureADGroupMember -ObjectId $group.ObjectId
+
+# Display user details for each member
+foreach ($member in $groupMembers) {
+    $user = Get-AzureADUser -ObjectId $member.ObjectId
+    $user | Select-Object DisplayName, UserPrincipalName, ObjectId
+}
+
+````
+
+In this example, replace "YourGroupName" with the actual name of the group you want to retrieve member details for. The Get-AzureADGroup cmdlet retrieves the group based on the provided search string (group name). The Get-AzureADGroupMember cmdlet retrieves the members of the group based on the group's ObjectId. The Select-Object cmdlet is used to display selected properties such as "DisplayName," "UserPrincipalName," and "ObjectId" for each member.
