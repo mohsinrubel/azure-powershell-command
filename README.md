@@ -219,5 +219,46 @@ if ($group) {
 Replace "YourGroupName" with the actual name of the group you want to retrieve member details for. This script fetches the group by name, checks if it exists, and then retrieves and displays user details including their email addresses and last login information. Make sure you have the necessary permissions to read group and user information in your Azure AD tenant.
 
 
+## Retrieve Specific Group's Members and Their User Information:
+
+Use the Get-AzureADGroupMember cmdlet to retrieve the members of a specific group. Then, for each user, fetch their user information and last sign-in information. Here's how to do it:
+
+````
+# Replace "YourGroupName" with the actual name of the group
+$groupName = "YourGroupName"
+
+# Get the group
+$group = Get-AzureADGroup -Filter "DisplayName eq '$groupName'"
+
+# Check if the group exists
+if ($group) {
+    # Get group members
+    $groupMembers = Get-AzureADGroupMember -ObjectId $group.ObjectId
+
+    # Iterate through group members
+    foreach ($member in $groupMembers) {
+        if ($member.objectType -eq "User") {
+            $user = Get-AzureADUser -ObjectId $member.ObjectId
+
+            # Get the user's last sign-in information
+            $signInActivity = Get-AzureADAuditSignInLogs -Filter "UserPrincipalName eq '$($user.UserPrincipalName)'" | Sort-Object -Property CreationTime -Descending | Select-Object -First 1
+
+            $lastSignIn = $signInActivity.CreationTime
+
+            # Display user information
+            Write-Host "User Name: $($user.DisplayName)"
+            Write-Host "User Email: $($user.Mail)"
+            Write-Host "Last Sign-In: $lastSignIn"
+            Write-Host ""
+        }
+    }
+} else {
+    Write-Host "Group '$groupName' not found."
+}
+
+````
+
+Replace "YourGroupName" with the actual name of the group you want to retrieve member details for. This script fetches the group by name, checks if it exists, and then retrieves and displays user details, including their email addresses and last sign-in information. Ensure that you have the necessary permissions to read group and user information in your Azure AD tenant.
+
 
 
