@@ -70,6 +70,39 @@ foreach ($member in $groupMembers) {
 
 In this example, replace "YourGroupName" with the actual name of the group you want to retrieve member details for. The Get-AzureADGroup cmdlet retrieves the group based on the provided search string (group name). The Get-AzureADGroupMember cmdlet retrieves the members of the group based on the group's ObjectId. The Select-Object cmdlet is used to display selected properties such as "DisplayName," "UserPrincipalName," and "ObjectId" for each member.
 
+## Retrieve Specific Group's Members:
+
+Use the Get-AzureADGroupMember cmdlet to retrieve the members of a specific group. Here's how to do it:
+
+````
+# Replace "YourGroupName" with the actual name of the group
+$groupName = "YourGroupName"
+
+# Get the group
+$group = Get-AzureADGroup -Filter "DisplayName eq '$groupName'"
+
+# Check if the group exists
+if ($group) {
+    # Get group members
+    $groupMembers = Get-AzureADGroupMember -ObjectId $group.ObjectId
+
+    # Display user details
+    foreach ($member in $groupMembers) {
+        if ($member.objectType -eq "User") {
+            $user = Get-AzureADUser -ObjectId $member.ObjectId
+            Write-Host "User DisplayName: $($user.DisplayName)"
+            Write-Host "User Principal Name: $($user.UserPrincipalName)"
+            # Add more user properties as needed
+            Write-Host ""
+        }
+    }
+} else {
+    Write-Host "Group '$groupName' not found."
+}
+
+````
+Replace "YourGroupName" with the actual name of the group you want to retrieve member details for. This script fetches the group by name, checks if it exists, and then retrieves and displays user details for each member of the group. You can customize which user properties you want to display by adding more lines in the foreach loop.
+
 ## Retrieve Specific Group's Members with Last Login Example1:
 
 Use the Microsoft Graph API through the AzureADPreview module to retrieve the members of a specific group along with their last login information. Here's how to do it:
@@ -142,3 +175,49 @@ $results | Select-Object DisplayName, UserPrincipalName, LastLogonDate
 * We check if the LastLogonDate property is not null (i.e., if it has a value), and if so, we create a custom object and add it to the $results array.
 
 * Finally, we display the results containing the DisplayName, UserPrincipalName, and LastLogonDate properties for users who are members of the specified group.
+
+
+## Retrieve Specific Group's Members and Their User Information:
+
+Use the Get-AzureADGroupMember cmdlet to retrieve the members of a specific group. Then, for each user, fetch their user information and last login information. Here's how to do it:
+
+````
+# Replace "YourGroupName" with the actual name of the group
+$groupName = "YourGroupName"
+
+# Get the group
+$group = Get-AzureADGroup -Filter "DisplayName eq '$groupName'"
+
+# Check if the group exists
+if ($group) {
+    # Get group members
+    $groupMembers = Get-AzureADGroupMember -ObjectId $group.ObjectId
+
+    # Iterate through group members
+    foreach ($member in $groupMembers) {
+        if ($member.objectType -eq "User") {
+            $user = Get-AzureADUser -ObjectId $member.ObjectId
+
+            # Get the user's last login information
+            $signInActivity = Get-AzureADAuditSignInLogs -Filter "UserId eq '$($user.ObjectId)'" | Sort-Object -Property CreationTime -Descending | Select-Object -First 1
+
+            $lastLogin = $signInActivity.CreationTime
+            
+            # Display user information
+            Write-Host "User DisplayName: $($user.DisplayName)"
+            Write-Host "User Email: $($user.Mail)"
+            Write-Host "Last Login: $lastLogin"
+            Write-Host ""
+        }
+    }
+} else {
+    Write-Host "Group '$groupName' not found."
+}
+
+````
+
+Replace "YourGroupName" with the actual name of the group you want to retrieve member details for. This script fetches the group by name, checks if it exists, and then retrieves and displays user details including their email addresses and last login information. Make sure you have the necessary permissions to read group and user information in your Azure AD tenant.
+
+
+
+
