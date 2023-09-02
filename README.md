@@ -29,9 +29,8 @@ Launch Visual Studio Code after installation.
 
 You can either create a new PowerShell script by clicking on `` "File" > "New File" and saving it with a .ps1 extension (e.g., myscript.ps1) ``. Alternatively, you can open an existing script.
 
-#### Write or Paste Your PowerShell Script:
-
-#### Write or paste your PowerShell script into the editor.
+* Write or Paste Your PowerShell Script:
+* Write or paste your PowerShell script into the editor.
 
 
 #### Run the Script:
