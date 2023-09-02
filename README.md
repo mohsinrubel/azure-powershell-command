@@ -260,5 +260,62 @@ if ($group) {
 
 Replace "YourGroupName" with the actual name of the group you want to retrieve member details for. This script fetches the group by name, checks if it exists, and then retrieves and displays user details, including their email addresses and last sign-in information. Ensure that you have the necessary permissions to read group and user information in your Azure AD tenant.
 
+## Add specific group user info in csv
+````
+# Install and import the AzureAD module if not already done
+Install-Module AzureAD
+Import-Module AzureAD
 
+# Connect to your Azure AD tenant
+Connect-AzureAD
 
+# Replace "YourGroupName" with the actual name of the group
+$groupName = "YourGroupName"
+
+# Get the group
+$group = Get-AzureADGroup -Filter "DisplayName eq '$groupName'"
+
+# Check if the group exists
+if ($group) {
+    # Get group members
+    $groupMembers = Get-AzureADGroupMember -ObjectId $group.ObjectId
+
+    # Initialize an array to store results
+    $results = @()
+
+    # Iterate through group members
+    foreach ($member in $groupMembers) {
+        if ($member.objectType -eq "User") {
+            $user = Get-AzureADUser -ObjectId $member.ObjectId
+
+            # Get the user's last sign-in information
+            $signInActivity = Get-AzureADAuditSignInLogs -Filter "UserPrincipalName eq '$($user.UserPrincipalName)'" | Sort-Object -Property CreationTime -Descending | Select-Object -First 1
+
+            $lastSignIn = $signInActivity.CreationTime
+
+            # Create a custom object with user information
+            $userInfo = [PSCustomObject]@{
+                Name = $user.DisplayName
+                Email = $user.Mail
+                LastSignIn = $lastSignIn
+            }
+
+            # Add the user information to the results array
+            $results += $userInfo
+        }
+    }
+
+    # Output the results to a text file
+    $results | Export-Csv -Path "UserInformation.csv" -NoTypeInformation
+    Write-Host "User information exported to UserInformation.csv"
+} else {
+    Write-Host "Group '$groupName' not found."
+}
+````
+
+### In this script:
+
+* Replace "YourGroupName" with the actual name of the group you want to retrieve member details for.
+* The script fetches the group by name, checks if it exists, and retrieves user details, including their email addresses and last sign-in information.
+* User information is stored in a custom object and added to the $results array.
+* The results are then exported to a CSV file named "UserInformation.csv" using Export-Csv.
