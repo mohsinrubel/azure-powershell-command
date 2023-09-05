@@ -2,6 +2,7 @@ Here is the step by step info to filter last login date for the users in specifi
 
 # Install the AzureADPreview Module
 Install-Module -Name AzureADPreview
+
 This line installs the AzureADPreview module, which is used to interact with Microsoft Azure Active Directory (Azure AD) in PowerShell.
 powershell
 Copy code
