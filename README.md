@@ -17,7 +17,7 @@ This line establishes a connection to Azure AD, allowing you to perform actions 
 
 
 # Replace "YourGroupName" with the actual name of the group
-$groupName = "SCSI Users"
+$groupName = "XYZ"
 
 This line assigns the group name "SCSI Users" to the variable $groupName. You should replace it with the actual name of the Azure AD group you want to query.
 
@@ -115,7 +115,7 @@ Import-Module AzureADPreview
 Connect-AzureAD
 
 # Replace "YourGroupName" with the actual name of the group
-$groupName = "SCSI Users"
+$groupName = "XYZ"
 
 # Get the group
 $group = Get-AzureADGroup -Filter "DisplayName eq '$groupName'"
