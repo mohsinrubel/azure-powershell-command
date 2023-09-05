@@ -115,47 +115,47 @@ Import-Module AzureADPreview
 Connect-AzureAD
 
 # Replace "YourGroupName" with the actual name of the group
-$groupName = "XYZ"
+$groupName = "SCSI Users"
 
 # Get the group
 $group = Get-AzureADGroup -Filter "DisplayName eq '$groupName'"
 
 # Check if the group exists
 if ($group) {
-    # Get group members
-    $groupMembers = Get-AzureADGroupMember -ObjectId $group.ObjectId
+    # Get group members
+    $groupMembers = Get-AzureADGroupMember -ObjectId $group.ObjectId
 
-    # Iterate through group members
-    $results = @()
-    foreach ($member in $groupMembers) {
-        if ($member.objectType -eq "User") {
-            $user = Get-AzureADUser -ObjectId $member.ObjectId
+    # Iterate through group members
+    $results = @()
+    foreach ($member in $groupMembers) {
+        if ($member.objectType -eq "User") {
+            $user = Get-AzureADUser -ObjectId $member.ObjectId
 
-            # Get the user's last sign-in information
-            $signInActivity = Get-AzureADAuditSignInLogs -Filter "UserPrincipalName eq '$($user.UserPrincipalName)'" | Sort-Object -Property CreatedDateTime -Descending | Select-Object -First 1
-            $lastSignIn = $signInActivity.CreatedDateTime
-            $userInfo = [PSCustomObject]@{
-                Name = $user.DisplayName
-                Email = $user.Mail
-                LastSignIn = $lastSignIn
-            }
+            # Get the user's last sign-in information
+            $signInActivity = Get-AzureADAuditSignInLogs -Filter "UserPrincipalName eq '$($user.UserPrincipalName)'" | Sort-Object -Property CreatedDateTime -Descending | Select-Object -First 1
+            $lastSignIn = $signInActivity.CreatedDateTime
+            $userInfo = [PSCustomObject]@{
+                Name = $user.DisplayName
+                Email = $user.Mail
+                LastSignIn = $lastSignIn
+            }
 
-            # Add the user information to the results array
-            $results += $userInfo
-            # Display user information
-            Write-Host "User Name: $($user.DisplayName)"
-            Write-Host "User Email: $($user.Mail)"
-            Write-Host "Last Sign-In: $lastSignIn"
-            Write-Host "#####"
-        }
-    }
+            # Add the user information to the results array
+            $results += $userInfo
+            # Display user information
+            Write-Host "User Name: $($user.DisplayName)"
+            Write-Host "User Email: $($user.Mail)"
+            Write-Host "Last Sign-In: $lastSignIn"
+            Write-Host "#####"
+        }
+    }
 
-    # Save the csv file with date 
-    $currentDateTime = Get-Date -Format "yyyyMMdd_HHmmss"
-    $results | Export-Csv -Path ".\UserInformation_$currentDateTime.csv" -NoTypeInformation
-    
+    # Save the csv file with date 
+    $currentDateTime = Get-Date -Format "yyyyMMdd_HHmmss"
+    $results | Export-Csv -Path ".\UserInformation_$currentDateTime.csv" -NoTypeInformation
+    
 } else {
-    Write-Host "Group '$groupName' not found."
-} 
+    Write-Host "Group '$groupName' not found."
+}
 
 
