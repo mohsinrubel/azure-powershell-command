@@ -4,55 +4,63 @@ Here is the step by step info to filter last login date for the users in specifi
 Install-Module -Name AzureADPreview
 
 This line installs the AzureADPreview module, which is used to interact with Microsoft Azure Active Directory (Azure AD) in PowerShell.
-powershell
-Copy code
+
 # Import the Azure AD Module
 Import-Module AzureADPreview
+
 This line imports the AzureADPreview module so that its cmdlets (commands) are available for use in the script.
-powershell
-Copy code
+
 # Connect with AzureAD
 Connect-AzureAD
+
 This line establishes a connection to Azure AD, allowing you to perform actions and retrieve information from your Azure AD environment.
-powershell
-Copy code
+
+
 # Replace "YourGroupName" with the actual name of the group
 $groupName = "SCSI Users"
+
 This line assigns the group name "SCSI Users" to the variable $groupName. You should replace it with the actual name of the Azure AD group you want to query.
-powershell
-Copy code
+
+
 # Get the group
 $group = Get-AzureADGroup -Filter "DisplayName eq '$groupName'"
+
 This line retrieves the Azure AD group based on the display name stored in the $groupName variable.
-powershell
-Copy code
+
+
 # Check if the group exists
 if ($group) {
+
 This line starts an if statement to check whether the group was found. If it exists, the code within the if block will be executed.
-powershell
-Copy code
-    # Get group members
+
+
+ # Get group members
     $groupMembers = Get-AzureADGroupMember -ObjectId $group.ObjectId
+
 This line retrieves the members of the Azure AD group and stores them in the $groupMembers variable.
-powershell
-Copy code
-    # Iterate through group members
+
+
+# Iterate through group members
     $results = @()
     foreach ($member in $groupMembers) {
+
 These lines initialize an empty array $results and start a loop to iterate through the group members.
 powershell
-Copy code
+
         if ($member.objectType -eq "User") {
+
 This line checks whether the member is a user (as opposed to another type of object).
 powershell
-Copy code
+
             $user = Get-AzureADUser -ObjectId $member.ObjectId
+
 This line retrieves information about the user and stores it in the $user variable.
 powershell
-Copy code
-            # Get the user's last sign-in information
-            $signInActivity = Get-AzureADAuditSignInLogs -Filter "UserPrincipalName eq '$($user.UserPrincipalName)'" | Sort-Object -Property CreatedDateTime -Descending | Select-Object -First 1
-            $lastSignIn = $signInActivity.CreatedDateTime
+
+# Get the user's last sign-in information
+ $signInActivity = Get-AzureADAuditSignInLogs -Filter "UserPrincipalName eq '$($user.UserPrincipalName)'" | Sort-Object -Property CreatedDateTime -Descending | Select-Object -First 1
+$lastSignIn = $signInActivity.CreatedDateTime
+
 These lines retrieve the last sign-in information for the user, including the timestamp of the last sign-in.
 powershell
 Copy code
