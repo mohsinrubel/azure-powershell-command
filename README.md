@@ -57,7 +57,7 @@ This line checks whether the member is a user (as opposed to another type of obj
 This line retrieves information about the user and stores it in the $user variable.
 
 
-# Get the user's last sign-in information
+# Get the users last sign-in information
 
 $signInActivity = Get-AzureADAuditSignInLogs -Filter "UserPrincipalName eq '$($user.UserPrincipalName)'" | Sort-Object -Property CreatedDateTime -Descending | Select-Object -First 1
 $lastSignIn = $signInActivity.CreatedDateTime
